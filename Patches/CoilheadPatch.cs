@@ -79,6 +79,10 @@ namespace MoreCounterplay.Patches
         public static void SpawnHead(Vector3 spawnPosition)
         {
             if (!ConfigSettings.DropHeadAsScrap.Value) return;
+
+            // Scale Coilhead scrap item down.
+            MoreCounterplay.HeadItem.spawnPrefab.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+
             var headItem = GameObject.Instantiate(MoreCounterplay.HeadItem.spawnPrefab, spawnPosition, Quaternion.identity);
             headItem.GetComponentInChildren<GrabbableObject>().SetScrapValue(Random.Range(ConfigSettings.MinHeadValue.Value, ConfigSettings.MaxHeadValue.Value));
             headItem.GetComponentInChildren<NetworkObject>().Spawn();

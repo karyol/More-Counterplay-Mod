@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
@@ -57,7 +57,10 @@ namespace MoreCounterplay.Patches
             headCollider.transform.SetParent(__instance.GetComponentsInChildren<Transform>().FirstOrDefault(child => child.name == "MeshContainer"));
             headCollider.transform.localPosition = new Vector3(-.004f, 2.1f, .1171f);
             headCollider.transform.localRotation = Quaternion.identity;
-            headCollider.layer = LayerMask.NameToLayer("Colliders");
+
+            // v56 made 'GrabbableObject' items exclude the 'Colliders' layer.
+            headCollider.layer = LayerMask.NameToLayer("Enemies");
+
             headCollider.GetComponent<BoxCollider>().center = Vector3.zero;
             headCollider.GetComponent<BoxCollider>().size = new Vector3(.9698f, .1f, 1.4889f);
             headCollider.GetComponent<BoxCollider>().isTrigger = true;
@@ -73,14 +76,10 @@ namespace MoreCounterplay.Patches
         public float GetObjectsWeight()
         {
             float weight = 0f;
-            foreach (GrabbableObject item in _objectsOnHead)
-            {
-                if (item.parentObject != transform)
-                {
-                    MoreCounterplay.Log($"Remove object from Jester's head {item.name}");
-                    _objectsOnHead.Remove(item);
-                }
-            }
+
+            // Remove all objects that match from the list.
+            int itemsRemoved = _objectsOnHead.RemoveAll((GrabbableObject item) => item.parentObject != transform);
+            MoreCounterplay.Log($"{itemsRemoved} objects removed from Jester's head");
 
             _objectsOnHead.ForEach(obj => weight += Mathf.Clamp(obj.itemProperties.weight - 1f, 0f, 10f));
             return weight;
@@ -103,6 +102,12 @@ namespace MoreCounterplay.Patches
 
             if (collision.TryGetComponent(out GrabbableObject grabbableObject))
             {
+                // Check if item is inside the ship, or on the ground. Should prevent Jester stealing items if it goes under the ship.
+                if (grabbableObject.isInShipRoom || grabbableObject.reachedFloorTarget)
+                {
+                    return;
+                }
+
                 MoreCounterplay.Log($"Add object to Jester's head {grabbableObject.name}");
                 grabbableObject.parentObject = transform;
                 if (!_objectsOnHead.Contains(grabbableObject)) _objectsOnHead.Add(grabbableObject);
