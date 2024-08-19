@@ -24,12 +24,11 @@ namespace MoreCounterplay.Patches
 
             __instance.enemyHP = ConfigSettings.SpringDurability.Value;
             __instance.enemyType.canDie = true;
-            __instance.dieSFX = ((SpringManAI)__instance).springNoises[Random.Range(0, ((SpringManAI)__instance).springNoises.Length)];
         }
 
         [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.HitEnemy))]
         [HarmonyPostfix]
-        public static void HitCoilhead(EnemyAI __instance, int force = 1, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+        public static void HitCoilhead(EnemyAI __instance, int hitID = -1)
         {
             if (!ConfigSettings.EnableCoilheadCounterplay.Value) return;
             if (__instance.GetType() != typeof(SpringManAI)) return;
@@ -39,15 +38,15 @@ namespace MoreCounterplay.Patches
                 switch (hitID)
                 {
                     case KNIFE_HIT_ID:
-                        CoilheadTakeHit(__instance, ConfigSettings.CoilheadKnifeDamage.Value);
+                        DamageCoilhead((SpringManAI)__instance, ConfigSettings.CoilheadKnifeDamage.Value);
                         break;
 
                     case SHOVEL_HIT_ID:
-                        CoilheadTakeHit(__instance, ConfigSettings.CoilheadShovelDamage.Value);
+                        DamageCoilhead((SpringManAI)__instance, ConfigSettings.CoilheadShovelDamage.Value);
                         break;
 
                     default:
-                        CoilheadTakeHit(__instance, ConfigSettings.CoilheadDefaultDamage.Value);
+                        DamageCoilhead((SpringManAI)__instance, ConfigSettings.CoilheadDefaultDamage.Value);
                         break;
                 }
             }
@@ -59,34 +58,57 @@ namespace MoreCounterplay.Patches
         {
             if (!ConfigSettings.EnableCoilheadCounterplay.Value) return;
             if (__instance.GetType() != typeof(SpringManAI)) return;
-            __instance.meshRenderers.First(mesh => mesh.name == "Head").gameObject.SetActive(false);
+            SwapHead(__instance.meshRenderers.First(mesh => mesh.name == "Head").gameObject);
         }
 
-        public static void CoilheadTakeHit(EnemyAI __instance, int force)
+        public static void DamageCoilhead(SpringManAI coilhead, int force)
         {
             MoreCounterplay.Log($"Coilhead hit for {force} damage");
-            __instance.enemyHP -= force;
-            if (__instance.enemyHP <= 0) KillCoilhead(__instance);
+            coilhead.enemyHP -= force;
+            if (coilhead.enemyHP <= 0)
+            {
+                coilhead.DoSpringAnimation(true); // Boioioioing.
+                KillCoilhead(coilhead);
+            }
         }
 
-        public static void KillCoilhead(EnemyAI __instance)
+        public static void KillCoilhead(SpringManAI coilhead)
         {
             MoreCounterplay.Log($"Coilhead killed");
-            __instance.KillEnemyOnOwnerClient(false);
-            SpawnHead(__instance.meshRenderers.First(mesh => mesh.name == "Head").gameObject.transform.position);
+            coilhead.KillEnemyOnOwnerClient(false);
+
+            // Reset Coilhead animations, collider, and target after death.
+            ResetCoilhead(coilhead);
         }
 
-        public static void SpawnHead(Vector3 spawnPosition)
+        public static void ResetCoilhead(SpringManAI coilhead)
         {
-            if (!ConfigSettings.DropHeadAsScrap.Value) return;
+            coilhead.hasStopped = true;
+            coilhead.creatureAnimator.SetFloat("walkSpeed", 0f);
+            coilhead.currentAnimSpeed = 0f;
+            coilhead.mainCollider.isTrigger = false;
+            if (coilhead.IsOwner)
+            {
+                coilhead.agent.speed = 0f;
+                coilhead.movingTowardsTargetPlayer = false;
+                coilhead.SetDestinationToPosition(coilhead.transform.position);
+            }
+        }
 
-            // Scale Coilhead scrap item down.
-            MoreCounterplay.HeadItem.spawnPrefab.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-
-            var headItem = GameObject.Instantiate(MoreCounterplay.HeadItem.spawnPrefab, spawnPosition, Quaternion.identity);
-            headItem.GetComponentInChildren<GrabbableObject>().SetScrapValue(Random.Range(ConfigSettings.MinHeadValue.Value, ConfigSettings.MaxHeadValue.Value));
+        public static void SwapHead(GameObject originalHead)
+        {
+            GameObject headItem = Object.Instantiate(MoreCounterplay.HeadItem.spawnPrefab, originalHead.transform.position, originalHead.transform.rotation);
             headItem.GetComponentInChildren<NetworkObject>().Spawn();
-            RoundManager.Instance.SyncScrapValuesClientRpc(new NetworkObjectReference[] { headItem.GetComponent<NetworkObject>() }, new int[] { headItem.GetComponent<GrabbableObject>().scrapValue });
+
+            GrabbableObject grabbableHead = headItem.GetComponentInChildren<GrabbableObject>();
+            grabbableHead.SetScrapValue(Random.Range(ConfigSettings.MinHeadValue.Value, ConfigSettings.MaxHeadValue.Value));
+            RoundManager.Instance.SyncScrapValuesClientRpc([headItem.GetComponent<NetworkObject>()], [headItem.GetComponent<GrabbableObject>().scrapValue]);
+
+            // Stop original head from rendering (instead of disabling it).
+            originalHead.GetComponentInChildren<Renderer>().enabled = false;
+
+            // Attach scrap head to the original to move alongside it.
+            grabbableHead.parentObject = originalHead.transform;
         }
     }
 }

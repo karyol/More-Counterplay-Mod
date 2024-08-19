@@ -5,7 +5,7 @@
         <AssemblyName>BaronDrakula.MoreCounterplay</AssemblyName>
         <Product>MoreCounterplay</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.2.2</Version>
+        <Version>1.2.3</Version>
     </PropertyGroup>
 
     <!-- Project Properties -->
@@ -13,7 +13,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <RootNamespace>MoreCounterplay</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <!-- Enable Nullable for better IDE null-checking -->
@@ -43,6 +43,7 @@
     <!-- Primary Package References -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
         <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all" />
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
@@ -56,7 +57,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Assembly-CSharp">
+      <Reference Include="Assembly-CSharp" Publicize="true">
         <HintPath>lib\Assembly-CSharp.dll</HintPath>
       </Reference>
     </ItemGroup>

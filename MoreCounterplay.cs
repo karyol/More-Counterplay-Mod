@@ -39,6 +39,14 @@ public class MoreCounterplay : BaseUnityPlugin
 
         HeadItem = Bundle.LoadAsset<Item>("Head.asset");
 
+        // Head size, position, and rotation adjustments.
+        HeadItem.itemSpawnsOnGround = false;
+        HeadItem.restingRotation = new Vector3(-90, 0, 90);
+        HeadItem.spawnPrefab.transform.localScale = new Vector3(0.1763f, 0.1763f, 0.1763f);
+        HeadItem.spawnPrefab.transform.rotation *= Quaternion.Euler(-90f, 0f, 0f);
+        HeadItem.verticalOffset = 0.1f;
+
+        LethalLib.Modules.Items.RegisterItem(HeadItem); // Register as a plain item to persist when reloading the save file.
         LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(HeadItem.spawnPrefab);
     }
 
