@@ -20,7 +20,7 @@ Items may be placed on top of a Jester by holding an item and interacting with i
 
  > Expecting a Jester to comply with carrying an excessive amount of weight may lead to disastrous consequences, as a desperate Jester's pop is much stronger than normal.
 
- **Hint:** _A Jester <u>will</u> let you know when you've exceeded its limits, but there's still a short window to correct your mistake..._
+ **Hint:** _A Jester **will** let you know when you've exceeded its limits, and there's still a short window to correct your mistake..._
 
  <img alt="A Jester with an anvil on its head chasing and killing the player after popping." src="https://files.catbox.moe/2cebnk.gif" width=256>
 
@@ -158,6 +158,112 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 - `EnableGhostGirlCounterplay` - Add counterplay for the Ghost Girl.
 
 </details>
+
+---
+
+### Barber (planned)
+
+<details>
+ <summary>Spoiler (WIP)</summary>
+
+ Adds the ability to spray paint Barbers in order to visually notice and keep track of them without fully revealing them, with the paint likely slowly fading away after a configurable amount of time.
+</details>
+
+<details>
+ <summary>Configs (WIP)</summary>
+
+- `EnableBarberCounterplay` - Add counterplay for the Barber.
+
+</details>
+
+---
+
+### Baboon Hawk (planned)
+
+<details>
+ <summary>Spoiler (WIP)</summary>
+
+ Adds the ability to shout at Baboon Hawks to briefly scare them away, similar to blowing an airhorn in front of them. Don't think the leader will let you get away with this, though...
+</details>
+
+<details>
+ <summary>Configs (WIP)</summary>
+
+- `EnableBaboonHawkCounterplay` - Add counterplay for the Baboon Hawk.
+
+</details>
+
+---
+
+### Forest Giant (planned)
+
+<details>
+ <summary>Spoiler (WIP)</summary>
+
+ Adds the ability to escape a Forest Giant's grasp by frantically jumping, at the cost of a configurable amount of stamina (certain number of jumps required). Intended to be most useful when immediately grabbed after exiting the facility, which can be quite unfair if the Forest Giant's location is not known.
+</details>
+
+<details>
+ <summary>Configs (WIP)</summary>
+
+- `EnableForestGiantCounterplay` - Add counterplay for the Forest Giant.
+
+</details>
+
+---
+
+### Old Bird (planned)
+
+<details>
+ <summary>Spoiler (WIP)</summary>
+
+ Makes Old Birds deactivate for a configurable amount of time if they happen to be struck by lightning. _Possibly_ also an interaction with Circuit Bees, if a player's brave enough...
+</details>
+
+<details>
+ <summary>Configs (WIP)</summary>
+
+- `EnableOldBirdCounterplay` - Add counterplay for the Old Bird.
+
+</details>
+
+---
+
+### Maneater (planned)
+
+<details>
+ <summary>Spoiler (WIP)</summary>
+
+ Adds a configurable list of items (e.g. `Candy`, or `Red soda`) that, when fed to a Maneater, will soothe it a lot more effectively and/or reset its crying timer.
+
+ Also, if I can figure out a good way to implement it, adding the ability to soothe a Maneater by humming, in addition to rocking it.
+</details>
+
+<details>
+ <summary>Configs (WIP)</summary>
+
+- `EnableManeaterCounterplay` - Add counterplay for the Maneater.
+
+</details>
+
+---
+
+### Mask Hornets (planned, _maybe_)
+
+<details>
+ <summary>Spoiler (WIP)</summary>
+
+ [StopBeesOpeningDoors](https://thunderstore.io/c/lethal-company/p/necrowing/StopBeesOpeningDoors) already exists, but if I can think of a good enough drawback to it, it'll definitely be added to this mod!
+</details>
+
+<details>
+ <summary>Configs (WIP)</summary>
+
+- `EnableMaskHornetsCounterplay` - Add counterplay for Mask Hornets.
+
+</details>
+
+---
 
 ## Bug Reports / Suggestions
 

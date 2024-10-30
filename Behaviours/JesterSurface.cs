@@ -54,6 +54,9 @@ namespace MoreCounterplay.Behaviours
 				Jester = jester;
 			}
 
+			// Set Jester surface layer to InteractableObject (where it's supposed to be).
+			gameObject.layer = LayerMask.NameToLayer("InteractableObject");
+
 			// Add Jester box as source and activate constraint to move alongside it.
 			ParentConstraint jesterConstraint = gameObject.AddComponent<ParentConstraint>();
 			jesterConstraint.AddSource(new()

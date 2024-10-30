@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1
+
+- Fixed clients not being able to place items on a Jester if it spawned inside while they were outside (or vice versa)
+- Added several planned future counterplays to the README, based on a lot of ideas and suggestions by the community!
+
 ## 1.4.0
 
 <ul>
