@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0
+
+- Added Feliopar counterplay
+
 ## 1.4.1
 
 - Fixed clients not being able to place items on a Jester if it spawned inside while they were outside (or vice versa)
