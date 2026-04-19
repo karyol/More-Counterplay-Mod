@@ -144,7 +144,7 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 
 ---
 
-### Feliopar
+### Feiopar
 
 <details>
  <summary>Spoiler (WIP)</summary>
@@ -155,7 +155,7 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 <details>
  <summary>Configs (WIP)</summary>
 
-- `EnableFelioparCounterplay` - Add counterplay for the Feliopar.
+- `EnableFeioparCounterplay` - Add counterplay for the Feiopar.
 
 </details>
 

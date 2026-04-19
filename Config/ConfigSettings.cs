@@ -54,6 +54,11 @@ namespace MoreCounterplay.Config
         public ConfigEntry<bool> EnableCoilheadScanNode { get; private set; }
         public ConfigEntry<bool> ModifyCoilheadScanNode { get; private set; }
         #endregion
+
+        #region Feiopar
+        [field: SyncedEntryField] public SyncedEntry<bool> EnableFeioparCounterplay { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<float> FeioparLaserPointerEffectiveRange { get; private set; }
+        #endregion
         #endregion
 
         public ConfigSettings(ConfigFile config) : base(MyPluginInfo.PLUGIN_GUID)
@@ -104,6 +109,11 @@ namespace MoreCounterplay.Config
                 new AcceptableValueRange<float>(0.0f, 1.0f)));
             EnableCoilheadScanNode = config.Bind("Coilhead", "EnableCoilheadScanNode", true, "(Client-side) Enable scanning Coilheads that have been killed.");
             ModifyCoilheadScanNode = config.Bind("Coilhead", "ModifyCoilheadScanNode", true, "(Client-side) Add extra text/subtext to a killed Coilhead's scan node.");
+            #endregion
+
+            #region Feiopar
+            EnableFeioparCounterplay = config.BindSyncedEntry("Feliopar", "EnableFeioparCounterplay", true, "Add counterplay for Feiopars. Required for all Feiopar settings under this.");
+            FeioparLaserPointerEffectiveRange = config.BindSyncedEntry("Feiopar", "FeioparLaserPointerEffectiveRange", 20f, "Maximum effective range of the laser pointer on the behavior of Feiopar.");
             #endregion
 
             // Function to run after configuration is synced (upon joining lobby).

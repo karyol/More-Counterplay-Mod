@@ -2,7 +2,8 @@
 
 ## 1.5.0
 
-- Added Feliopar counterplay
+- Mod comptibility with v81 game version
+- Added Feiopar counterplay
 
 ## 1.4.1
 
