@@ -284,7 +284,7 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 
 ## Bug Reports / Suggestions
 
-If you come across any issues or mod incompatibilities, or simply have an interesting idea you'd like to see implemented, feel free to drop a message in the [relevant thread](https://discord.com/channels/1168655651455639582/1212542584610881557) in the [Lethal Company Modding Discord server](https://discord.com/invite/lcmod), or [open an issue on GitHub](https://github.com/karyol/More-Counterplay-Mod/issues)!
+If you come across any issues or mod incompatibilities, or simply have an interesting idea you'd like to see implemented, feel free to drop a message in the [relevant thread](https://discord.com/channels/1168655651455639582/1272137763667447819) in the [Lethal Company Modding Discord server](https://discord.com/invite/lcmod), or [open an issue on GitHub](https://github.com/karyol/More-Counterplay-Mod/issues)!
 
 ## Credits
 
