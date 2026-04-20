@@ -112,8 +112,8 @@ namespace MoreCounterplay.Config
             #endregion
 
             #region Feiopar
-            EnableFeioparCounterplay = config.BindSyncedEntry("Feliopar", "EnableFeioparCounterplay", true, "Add counterplay for Feiopars. Required for all Feiopar settings under this.");
-            FeioparLaserPointerEffectiveRange = config.BindSyncedEntry("Feiopar", "FeioparLaserPointerEffectiveRange", 20f, "Maximum effective range of the laser pointer on the behavior of Feiopar.");
+            EnableFeioparCounterplay = config.BindSyncedEntry("Feiopar", "EnableFeioparCounterplay", true, "Add counterplay for Feiopars. Required for all Feiopar settings under this.");
+            FeioparLaserPointerEffectiveRange = config.BindSyncedEntry("Feiopar", "FeioparLaserPointerEffectiveRange", 40f, "Maximum effective range of the laser pointer on the behavior of Feiopar.");
             #endregion
 
             // Function to run after configuration is synced (upon joining lobby).
