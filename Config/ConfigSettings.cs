@@ -58,6 +58,7 @@ namespace MoreCounterplay.Config
         #region Feiopar
         [field: SyncedEntryField] public SyncedEntry<bool> EnableFeioparCounterplay { get; private set; }
         [field: SyncedEntryField] public SyncedEntry<float> FeioparLaserPointerEffectiveRange { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> CanDamagePlayerWhileAttackingLaser { get; private set; }
         #endregion
         #endregion
 
@@ -114,6 +115,7 @@ namespace MoreCounterplay.Config
             #region Feiopar
             EnableFeioparCounterplay = config.BindSyncedEntry("Feiopar", "EnableFeioparCounterplay", true, "Add counterplay for Feiopars. Required for all Feiopar settings under this.");
             FeioparLaserPointerEffectiveRange = config.BindSyncedEntry("Feiopar", "FeioparLaserPointerEffectiveRange", 40f, "Maximum effective range of the laser pointer on the behavior of Feiopar.");
+            CanDamagePlayerWhileAttackingLaser = config.BindSyncedEntry("Feiopar", "CanDamagePlayerWhileAttackingLaser", true, "Allow Feiopars to damage the player while they are attacking laser pointer.");
             #endregion
 
             // Function to run after configuration is synced (upon joining lobby).

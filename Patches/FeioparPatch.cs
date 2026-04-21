@@ -77,7 +77,7 @@ namespace MoreCounterplay.Patches
                 if (!currentlyHeldItem.isBeingUsed) // Not being used
                     continue;
 
-                Vector3 raycastStartPosition = (currentlyHeldItem as FlashlightItem).flashlightBulb.transform.position;
+                Vector3 raycastStartPosition = ((FlashlightItem)currentlyHeldItem).flashlightBulb.transform.position;
                 if (!Physics.Raycast(raycastStartPosition, currentlyHeldItem.transform.forward, out RaycastHit hit)) // No raycast hit
                     continue;
 
@@ -227,8 +227,8 @@ namespace MoreCounterplay.Patches
                     float distanceToTarget = Vector3.Distance(__instance.transform.position, targetPoint);
 
                     // Play scratching animation if close enough to the target
-                    bool shouldScratch = distanceToTarget < 6f;
-                    __instance.creatureAnimator.SetBool("Scratching", shouldScratch);
+                    __instance.scratching = distanceToTarget < 6f;
+                    __instance.creatureAnimator.SetBool("Scratching", __instance.scratching);
 
                     // Scream audio if close enough to the target
                     if (distanceToTarget < 6f)
@@ -267,6 +267,21 @@ namespace MoreCounterplay.Patches
                 default:
                     return;
             }
+        }
+
+
+        [HarmonyPatch(typeof(PumaAI), nameof(PumaAI.AnimationEventC))]
+        [HarmonyPostfix]
+        private static void ScratchAnimationEvent(PumaAI __instance)
+        {
+            if (!MoreCounterplay.Settings.EnableFeioparCounterplay)
+                return;
+
+            if (__instance.currentBehaviourStateIndex != 3) // Check if in the laser pointer attack state
+                return;
+
+            __instance.timeAtLastScratch = Time.realtimeSinceStartup;
+            RoundManager.PlayRandomClip(__instance.creatureSFX, __instance.scratchSFX, true, Random.Range(0.6f, 1f), 0, 1000);
         }
     }
 }
