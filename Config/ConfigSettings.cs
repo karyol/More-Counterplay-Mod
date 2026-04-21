@@ -59,6 +59,8 @@ namespace MoreCounterplay.Config
         [field: SyncedEntryField] public SyncedEntry<bool> EnableFeioparCounterplay { get; private set; }
         [field: SyncedEntryField] public SyncedEntry<float> FeioparLaserPointerEffectiveRange { get; private set; }
         [field: SyncedEntryField] public SyncedEntry<bool> CanDamagePlayerWhileAttackingLaser { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<bool> CanDamageEnemiesWhileAttackingLaser { get; private set; }
+        [field: SyncedEntryField] public SyncedEntry<int> FeioparEnemyHitForce { get; private set; }
         #endregion
         #endregion
 
@@ -116,6 +118,8 @@ namespace MoreCounterplay.Config
             EnableFeioparCounterplay = config.BindSyncedEntry("Feiopar", "EnableFeioparCounterplay", true, "Add counterplay for Feiopars. Required for all Feiopar settings under this.");
             FeioparLaserPointerEffectiveRange = config.BindSyncedEntry("Feiopar", "FeioparLaserPointerEffectiveRange", 40f, "Maximum effective range of the laser pointer on the behavior of Feiopar.");
             CanDamagePlayerWhileAttackingLaser = config.BindSyncedEntry("Feiopar", "CanDamagePlayerWhileAttackingLaser", true, "Allow Feiopars to damage the player while they are attacking laser pointer.");
+            CanDamageEnemiesWhileAttackingLaser = config.BindSyncedEntry("Feiopar", "CanDamageEnemiesWhileAttackingLaser", true, "Allow Feiopars to damage enemies while they are attacking laser pointer.");
+            FeioparEnemyHitForce = config.BindSyncedEntry("Feiopar", "FeioparEnemyHitForce", 1, "Hit force of feiopar attacks applied to enemies.\nFor feference shovel hit force is 1.");
             #endregion
 
             // Function to run after configuration is synced (upon joining lobby).

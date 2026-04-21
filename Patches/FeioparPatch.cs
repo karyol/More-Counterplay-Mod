@@ -13,6 +13,7 @@ namespace MoreCounterplay.Patches
             public float ClosestLaserDistance;
             public Vector3 LastLaserPosition;
             public int PumaAttackAnimationHash;
+            public float TimeAtLastEnemyScratch;
 
             public void Initialize(PumaAI pumaAI)
             {
@@ -21,7 +22,9 @@ namespace MoreCounterplay.Patches
                 ClosestLaserDistance = float.MaxValue;
                 LastLaserPosition = pumaAI.transform.position;
                 PumaAttackAnimationHash = Animator.StringToHash("Base Layer.PumaAttack1");
+                TimeAtLastEnemyScratch = Time.realtimeSinceStartup;
                 AddBehaviourState(pumaAI);
+                AllowHittingEnemies(pumaAI);
             }
 
             private void AddBehaviourState(PumaAI pumaAI)
@@ -30,6 +33,16 @@ namespace MoreCounterplay.Patches
                 {
                     name = "AttackLaserPointer",
                 });
+            }
+
+            private void AllowHittingEnemies(PumaAI pumaAI)
+            {
+                var enemyAICollisionDetect = pumaAI.GetComponentInChildren<EnemyAICollisionDetect>();
+
+                if (enemyAICollisionDetect.canCollideWithEnemies)
+                    return;
+
+                enemyAICollisionDetect.canCollideWithEnemies = MoreCounterplay.Settings.CanDamageEnemiesWhileAttackingLaser;
             }
         }
 
@@ -269,7 +282,6 @@ namespace MoreCounterplay.Patches
             }
         }
 
-
         [HarmonyPatch(typeof(PumaAI), nameof(PumaAI.AnimationEventC))]
         [HarmonyPostfix]
         private static void ScratchAnimationEvent(PumaAI __instance)
@@ -280,8 +292,51 @@ namespace MoreCounterplay.Patches
             if (__instance.currentBehaviourStateIndex != 3) // Check if in the laser pointer attack state
                 return;
 
-            __instance.timeAtLastScratch = Time.realtimeSinceStartup;
+            // Play scratch sound effect
             RoundManager.PlayRandomClip(__instance.creatureSFX, __instance.scratchSFX, true, Random.Range(0.6f, 1f), 0, 1000);
+
+            if (MoreCounterplay.Settings.CanDamagePlayerWhileAttackingLaser) // Apply scratch damage to nearby players
+                __instance.timeAtLastScratch = Time.realtimeSinceStartup;
+
+            if (__instance.gameObject.TryGetComponent(out FeioparAdditionalData feioparAdditionalData) // Apply scratch damage to nearby enemies
+                && MoreCounterplay.Settings.CanDamageEnemiesWhileAttackingLaser)
+                feioparAdditionalData.TimeAtLastEnemyScratch = Time.realtimeSinceStartup;
+        }
+
+        [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.OnCollideWithEnemy))]
+        [HarmonyPostfix]
+        private static void OnCollideWithEnemy(EnemyAI __instance, Collider other, EnemyAI collidedEnemy)
+        {
+            if (!MoreCounterplay.Settings.EnableFeioparCounterplay)
+                return;
+
+            if (!MoreCounterplay.Settings.CanDamageEnemiesWhileAttackingLaser)
+                return;
+
+            if (__instance.isEnemyDead || __instance.GetType() != typeof(PumaAI)) // Check if enemy is alive and is a Feiopar
+                return;
+
+            if (__instance.currentBehaviourStateIndex != 3) // Check if in the laser pointer attack state
+                return;
+
+            if (collidedEnemy == null)
+                return;
+
+            if (collidedEnemy.enemyType == __instance.enemyType) // Prevent dealing damage to enemies of the same type (Feiopars)
+                return;
+
+            if (!collidedEnemy.enemyType.canDie) // Do not try to damage immortal enemies
+                return;
+
+            if (!__instance.gameObject.TryGetComponent(out FeioparAdditionalData feioparAdditionalData))
+                return;
+
+            if (Time.realtimeSinceStartup - feioparAdditionalData.TimeAtLastEnemyScratch >= 3f) // Check cooldown
+                return;
+
+            MoreCounterplay.Log($"Feiopar: Deal damage to enemy {collidedEnemy.name}");
+            feioparAdditionalData.TimeAtLastEnemyScratch = 0f;
+            collidedEnemy.HitEnemy(MoreCounterplay.Settings.FeioparEnemyHitForce, null, true, -1);
         }
     }
 }
