@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Linq;
 using UnityEngine;
 
 namespace MoreCounterplay.Patches
@@ -91,7 +92,7 @@ namespace MoreCounterplay.Patches
                     continue;
 
                 Vector3 raycastStartPosition = ((FlashlightItem)currentlyHeldItem).flashlightBulb.transform.position;
-                if (!Physics.Raycast(raycastStartPosition, currentlyHeldItem.transform.forward, out RaycastHit hit)) // No raycast hit
+                if (!DoRaycast(raycastStartPosition, currentlyHeldItem.transform.forward, out RaycastHit hit)) // No raycast hit
                     continue;
 
                 float distance = Vector3.Distance(__instance.transform.position, hit.point);
@@ -121,8 +122,32 @@ namespace MoreCounterplay.Patches
             }
         }
 
+        private static bool DoRaycast(Vector3 origin, Vector3 direction, out RaycastHit hit)
+        {
+            hit = default;
+            var hits = Physics.RaycastAll(origin, direction); // Get all raycast hits in the direction of the laser pointer
+
+            if (hits.Length == 0) // No hits at all
+                return false;
+
+            var sortedHits = hits.OrderBy(x => x.distance);
+            foreach (var raycastHit in sortedHits)
+            {
+                if (raycastHit.transform.GetComponentInParent<PumaAI>() != null) // Ignore raycast hits on the Feiopars
+                    continue;
+
+                hit = raycastHit;
+                break;
+            }
+
+            return true;
+        }
+
         private static void ForceTreeDrop(PumaAI __instance)
         {
+            if (!__instance.IsServer && !__instance.IsHost)
+                return;
+
             MoreCounterplay.Log("Feiopar: Force tree drop");
             if (__instance.StartTreeDropOnLocalClient(false))
             {
