@@ -147,16 +147,39 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 ### Feiopar
 
 <details>
- <summary>Spoiler (WIP)</summary>
+ <summary>Spoiler</summary>
 
- Cats like laser poiters, right?
+ Cats like laser poiters, right?<br>
+ You can use that to distract them, but be aware they are very aggressive when they see one, you can use that against other monsters or to have some fun with your friends.
+
+ <details>
+ <summary>Spoiler (specific mechanics and configuration):</summary>
+
+ - Feiopars will seek for closest player with active laser pointer
+ - Feiopars will go to where laser is pointing and actively try to attack it
+ - When Feiopar stop attacking laser pointer they go back to their normal behavior (looking for a trees to climb)
+ - If Feiopar is on tree when finding laser pointer it will jump down to attack laser pointer
+ - Feiopars will ignore laser pointers if:
+	- Laser is pointing a place out of range (configurable via `FeioparLaserPointerEffectiveRange` setting) - keep in mind that since Feiopars can climb trees that range needs to be at least a tree size to work properly
+	- Laser is not held by player
+	- Laser is not toggled on
+ - Feiopars will damage players when attacking laser pointer
+	- Can be disabled by toggling the `CanDamagePlayerWhileAttackingLaser` setting
+	- Damage dealt to players is the same as their normal attack damage
+ - Feiopars will damage enemies when attacking laser pointer
+	- Can be disabled by toggling the `CanDamageEnemiesWhileAttackingLaser` setting
+	- Hit force applied to enemies can be configured via the `FeioparEnemyHitForce` setting
+ </details>
 </details>
 
 <details>
- <summary>Configs (WIP)</summary>
+ <summary>Configs</summary>
 
 - `EnableFeioparCounterplay` - Add counterplay for the Feiopar.
-
+- `FeioparLaserPointerEffectiveRange` - Maximum effective range of the laser pointer on the behavior of Feiopar.
+- `CanDamagePlayerWhileAttackingLaser` - Allow Feiopars to damage the player while they are attacking laser pointer.
+- `CanDamageEnemiesWhileAttackingLaser` - Allow Feiopars to damage enemies while they are attacking laser pointer.
+- `FeioparEnemyHitForce` - Hit force of feiopar attacks applied to enemies.
 </details>
 
 ---
