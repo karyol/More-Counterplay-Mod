@@ -74,8 +74,15 @@ namespace MoreCounterplay.Patches
 
                     if (Settings.DropHeadAsScrap)
                     {
+                        // Find the Coilhead head transform in its enemy prefab.
+                        var coilheadHead = coilheadPrefab.transform.Find("SpringManModel/Head");
+
+                        // Obtain Coilhead head mesh from its enemy prefab and assign it to the 'Coilless Coilhead' scrap item prefab.
+                        Mesh mesh = coilheadHead.GetComponent<MeshFilter>().sharedMesh;
+                        HeadItem.Prefab.GetComponent<MeshFilter>().sharedMesh = mesh;
+
                         // Obtain Coilhead material from its enemy prefab and assign it to the 'Coilless Coilhead' scrap item prefab.
-                        Material coilheadMaterial = coilheadPrefab.transform.Find("SpringManModel/Head").GetComponent<MeshRenderer>().sharedMaterial;
+                        Material coilheadMaterial = coilheadHead.GetComponent<MeshRenderer>().sharedMaterial;
                         HeadItem.Prefab.GetComponent<MeshRenderer>().sharedMaterial = coilheadMaterial;
                     }
                 }

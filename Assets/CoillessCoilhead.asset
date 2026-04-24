@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 0
   itemName: Coilless Coilhead
-  spawnPositionTypes:
-  - {fileID: 11400000, guid: 631eb922e3a7c954887bcbcbb51e504a, type: 2}
+  spawnPositionTypes: []
   twoHanded: 0
   twoHandedAnimation: 0
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 1
+  disallowUtilitySlot: 0
   weight: 1.16
   itemIsTrigger: 0
   holdButtonUse: 0
@@ -36,16 +36,16 @@ MonoBehaviour:
   requiresBattery: 0
   batteryUsage: 0
   automaticallySetUsingPower: 0
-  itemIcon: {fileID: 21300000, guid: 2c2b590c4b586054094908e64b9eb0ec, type: 3}
+  itemIcon: {fileID: 21300000, guid: 416e03ff332c2154c91aa2c27f9d0018, type: 2}
   grabAnim: 
   useAnim: 
   pocketAnim: 
   throwAnim: 
   grabAnimationTime: 0
-  grabSFX: {fileID: 8300000, guid: 95c242c2b10bf344faaf301449b119f3, type: 3}
-  dropSFX: {fileID: 8300000, guid: 8bb2dca15e5931f4aa011585ec4b9a8f, type: 3}
-  pocketSFX: {fileID: 8300000, guid: 7059fd1b7ceca974082db4f1481ed6e5, type: 3}
-  throwSFX: {fileID: 8300000, guid: 67ff19da0493ecc4886e4c86d70ca9d7, type: 3}
+  grabSFX: {fileID: 8300000, guid: dbb3584b3d975d549a40b1284cf1dc3b, type: 3}
+  dropSFX: {fileID: 8300000, guid: 7bdae57b863e6e44398351c3508a91c5, type: 3}
+  pocketSFX: {fileID: 0}
+  throwSFX: {fileID: 0}
   syncGrabFunction: 1
   syncUseFunction: 1
   syncDiscardFunction: 1
@@ -62,5 +62,6 @@ MonoBehaviour:
   meshOffset: 1
   meshVariants: []
   materialVariants: []
+  clinkAudios: []
   usableInSpecialAnimations: 0
   canBeInspected: 1

@@ -4,12 +4,11 @@ using HarmonyLib;
 using MoreCounterplay.Behaviours;
 using MoreCounterplay.Config;
 using MoreCounterplay.Items;
-using MoreCounterplay.Patches;
 using System;
 using System.IO;
 using System.Reflection;
-using Unity.Netcode;
 using UnityEngine;
+using static MoreCounterplay.Patches.FeioparPatch;
 
 namespace MoreCounterplay;
 
@@ -70,6 +69,18 @@ public class MoreCounterplay : BaseUnityPlugin
         // Register 'Coilless Coilhead' as both a plain item and a network prefab.
         LethalLib.Modules.Items.RegisterItem(headProperties);
         LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(headProperties.spawnPrefab);
+        #endregion
+
+        #region Feiopar
+        // Load Feiopar additional data container prefab.
+        GameObject feioparDataContainer = Bundle.LoadAsset<GameObject>("FeioparAdditionalData.prefab");
+
+        // Add FeioparAdditionalData component to Feiopar additional data container prefab.
+        feioparDataContainer.AddComponent<FeioparAdditionalData>();
+        FeioparAdditionalData.FeioparAdditionalDataPrefab = feioparDataContainer;
+
+        // Register Feiopar additional data container as a network prefab.
+        LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(feioparDataContainer);
         #endregion
     }
 
