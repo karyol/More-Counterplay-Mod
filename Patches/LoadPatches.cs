@@ -36,7 +36,8 @@ namespace MoreCounterplay.Patches
         internal static void FindAndModifyPrefabs()
         {
             // Currently, only the Coilhead counterplay requires textures loaded at runtime.
-            if (!Settings.EnableCoilheadCounterplay) return;
+            if (!Settings.EnableCoilheadCounterplay)
+                return;
 
             Log("Loading prefab textures...");
 
@@ -73,9 +74,16 @@ namespace MoreCounterplay.Patches
 
                     if (Settings.DropHeadAsScrap)
                     {
+                        // Find the Coilhead head transform in its enemy prefab.
+                        var coilheadHead = coilheadPrefab.transform.Find("SpringManModel/Head");
+
+                        // Obtain Coilhead head mesh from its enemy prefab and assign it to the 'Coilless Coilhead' scrap item prefab.
+                        Mesh mesh = coilheadHead.GetComponent<MeshFilter>().sharedMesh;
+                        HeadItem.Prefab.GetComponent<MeshFilter>().sharedMesh = mesh;
+
                         // Obtain Coilhead material from its enemy prefab and assign it to the 'Coilless Coilhead' scrap item prefab.
-                        Material coilheadMaterial = coilheadPrefab.transform.Find("SpringManModel/Head").GetComponent<MeshRenderer>().material;
-                        HeadItem.Prefab.GetComponent<MeshRenderer>().material = coilheadMaterial;
+                        Material coilheadMaterial = coilheadHead.GetComponent<MeshRenderer>().sharedMaterial;
+                        HeadItem.Prefab.GetComponent<MeshRenderer>().sharedMaterial = coilheadMaterial;
                     }
                 }
                 else
@@ -88,11 +96,17 @@ namespace MoreCounterplay.Patches
             // Try to find and obtain the Forest Giant enemy prefab.
             if (Settings.LoreAccurateCoilheads && Settings.ExplosionFire.Value && VanillaPrefabUtils.GetOutsideEnemyPrefab("ForestGiant", out GameObject? giantPrefab))
             {
-                if (CoilExplosion.RadioactiveFirePrefab != null && giantPrefab != null)
+                if (CoilExplosion.RadioactiveFirePrefab != null
+                    && giantPrefab != null
+                    && giantPrefab.transform.Find("FireParticlesContainer/LingeringFire").TryGetComponent(out ParticleSystemRenderer giantLingeringFire))
                 {
                     // Obtain burning Forest Giant flame texture from its enemy prefab and assign it to the radioactive fire's 'GreenFlame' material.
-                    Texture flameTexture = giantPrefab.transform.Find("FireParticlesContainer/LingeringFire").GetComponent<ParticleSystemRenderer>().material.mainTexture;
-                    CoilExplosion.RadioactiveFirePrefab.transform.Find("GreenFlame").GetComponent<ParticleSystemRenderer>().material.mainTexture = flameTexture;
+                    Texture flameTexture = giantLingeringFire.sharedMaterial.mainTexture;
+                    var greenFlame = CoilExplosion.RadioactiveFirePrefab.transform.Find("GreenFlame");
+
+                    if (greenFlame != null && greenFlame.TryGetComponent(out ParticleSystemRenderer greenFlameParticles))
+                        greenFlameParticles.sharedMaterial.mainTexture = flameTexture;
+
                 }
                 else
                 {

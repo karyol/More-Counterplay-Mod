@@ -119,7 +119,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5619992591495350180}
-  m_Mesh: {fileID: 4300000, guid: 0a15533f48b09d543ad70b850b40f823, type: 2}
+  m_Mesh: {fileID: 0}
 --- !u!23 &2629727558841336122
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -174,7 +174,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
+  GlobalObjectIdHash: 318986744
+  InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -212,7 +213,7 @@ AudioSource:
   m_GameObject: {fileID: 5619992591495350180}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300044, guid: 19e546d261dc2f54a85b95f24d659634,
+  OutputAudioMixerGroup: {fileID: 24300044, guid: fdc231e717515e94589ed5f5055c8d98,
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0

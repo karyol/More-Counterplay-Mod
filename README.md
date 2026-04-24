@@ -144,6 +144,46 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 
 ---
 
+### Feiopar
+
+<details>
+ <summary>Spoiler</summary>
+
+ Cats like laser poiters, right?<br>
+ You can use that to distract them, but be aware they are very aggressive when they see one, you can use that against other monsters or to have some fun with your friends.
+
+ <details>
+ <summary>Spoiler (specific mechanics and configuration):</summary>
+
+ - Feiopars will seek for closest player with active laser pointer
+ - Feiopars will go to where laser is pointing and actively try to attack it
+ - When Feiopar stop attacking laser pointer they go back to their normal behavior (looking for a trees to climb)
+ - If Feiopar is on tree when finding laser pointer it will jump down to attack laser pointer
+ - Feiopars will ignore laser pointers if:
+	- Laser is pointing a place out of range (configurable via `FeioparLaserPointerEffectiveRange` setting) - keep in mind that since Feiopars can climb trees that range needs to be at least a tree size to work properly
+	- Laser is not held by player
+	- Laser is not toggled on
+ - Feiopars will damage players when attacking laser pointer
+	- Can be disabled by toggling the `CanDamagePlayerWhileAttackingLaser` setting
+	- Damage dealt to players is the same as their normal attack damage
+ - Feiopars will damage enemies when attacking laser pointer
+	- Can be disabled by toggling the `CanDamageEnemiesWhileAttackingLaser` setting
+	- Hit force applied to enemies can be configured via the `FeioparEnemyHitForce` setting
+ </details>
+</details>
+
+<details>
+ <summary>Configs</summary>
+
+- `EnableFeioparCounterplay` - Add counterplay for the Feiopar.
+- `FeioparLaserPointerEffectiveRange` - Maximum effective range of the laser pointer on the behavior of Feiopar.
+- `CanDamagePlayerWhileAttackingLaser` - Allow Feiopars to damage the player while they are attacking laser pointer.
+- `CanDamageEnemiesWhileAttackingLaser` - Allow Feiopars to damage enemies while they are attacking laser pointer.
+- `FeioparEnemyHitForce` - Hit force of feiopar attacks applied to enemies.
+</details>
+
+---
+
 ### Ghost Girl (planned)
 
 <details>
@@ -267,7 +307,7 @@ You can cut off a Coilhead's head using the [Knife](https://lethal.miraheze.org/
 
 ## Bug Reports / Suggestions
 
-If you come across any issues or mod incompatibilities, or simply have an interesting idea you'd like to see implemented, feel free to drop a message in the [relevant thread](https://discord.com/channels/1168655651455639582/1212542584610881557) in the [Lethal Company Modding Discord server](https://discord.com/invite/lcmod), or [open an issue on GitHub](https://github.com/karyol/More-Counterplay-Mod/issues)!
+If you come across any issues or mod incompatibilities, or simply have an interesting idea you'd like to see implemented, feel free to drop a message in the [relevant thread](https://discord.com/channels/1168655651455639582/1272137763667447819) in the [Lethal Company Modding Discord server](https://discord.com/invite/lcmod), or [open an issue on GitHub](https://github.com/karyol/More-Counterplay-Mod/issues)!
 
 ## Credits
 
