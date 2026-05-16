@@ -4,6 +4,7 @@
 
 - Fixed not working interaction for placing items on Jester
 - Interaction icon for placing items on Jester now shows correctly
+- Fixed Jester's weight not updating after removing items from it
 
 ## 1.5.0
 

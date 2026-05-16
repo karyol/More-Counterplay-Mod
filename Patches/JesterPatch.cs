@@ -13,7 +13,8 @@ namespace MoreCounterplay.Patches
         [HarmonyPostfix]
         public static void OnSpawn(JesterAI __instance)
         {
-            if ((!__instance.IsServer && !__instance.IsHost) || !MoreCounterplay.Settings.EnableJesterCounterplay) return;
+            if ((!__instance.IsServer && !__instance.IsHost) || !MoreCounterplay.Settings.EnableJesterCounterplay)
+                return;
 
             if (JesterSurface.JesterSurfacePrefab == null)
             {
@@ -41,11 +42,14 @@ namespace MoreCounterplay.Patches
         [HarmonyPrefix]
         public static void CheckJesterHead(EnemyAI __instance, ref int stateIndex)
         {
-            if ((!__instance.IsServer && !__instance.IsHost) || !MoreCounterplay.Settings.EnableJesterCounterplay) return;
-            if (__instance.GetType() != typeof(JesterAI)) return;
+            if ((!__instance.IsServer && !__instance.IsHost) || !MoreCounterplay.Settings.EnableJesterCounterplay)
+                return;
+            if (__instance.GetType() != typeof(JesterAI))
+                return;
 
             // Find and obtain JesterSurface component.
-            if (__instance.transform.Find("JesterSurface")?.TryGetComponent(out JesterSurface jesterSurface) != true) return;
+            if (__instance.transform.Find("JesterSurface")?.TryGetComponent(out JesterSurface jesterSurface) != true)
+                return;
 
             // Check which behaviour state the Jester is about to switch to.
             switch (stateIndex)
@@ -92,23 +96,21 @@ namespace MoreCounterplay.Patches
         [HarmonyPrefix]
         public static void GrabItem(GrabbableObject __instance)
         {
-            if (!__instance.IsOwner || !MoreCounterplay.Settings.EnableJesterCounterplay) return;
+            if (!__instance.IsOwner || !MoreCounterplay.Settings.EnableJesterCounterplay)
+                return;
 
-            // Find and obtain JesterSurface component.
-            if (__instance.transform.GetParent()?.TryGetComponent(out JesterSurface jesterSurface) != true) return;
-
-            // Remove item from the Jester on all clients.
-            jesterSurface.RemoveItemOnClient(__instance);
-            jesterSurface.RemoveItemServerRpc(GameNetworkManager.Instance.localPlayerController.GetComponent<NetworkObject>(),
-                __instance.GetComponent<NetworkObject>());
+            // Invoke item grab event for JesterSurface.
+            JesterSurface.OnItemGrabAction?.Invoke(__instance);
         }
 
         [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.HitEnemy))]
         [HarmonyPrefix]
         private static void HitJester(EnemyAI __instance, PlayerControllerB playerWhoHit, int hitID = -1)
         {
-            if (playerWhoHit == null || !playerWhoHit.IsOwner || !MoreCounterplay.Settings.EnableJesterCounterplay) return;
-            if (__instance.isEnemyDead || __instance.GetType() != typeof(JesterAI)) return;
+            if (playerWhoHit == null || !playerWhoHit.IsOwner || !MoreCounterplay.Settings.EnableJesterCounterplay)
+                return;
+            if (__instance.isEnemyDead || __instance.GetType() != typeof(JesterAI))
+                return;
 
             // Drop all items on all clients if the Jester is hit by a shovel.
             if (__instance.currentBehaviourStateIndex != 2 && hitID == 1 && MoreCounterplay.Settings.DropItemsOnHit
@@ -123,8 +125,10 @@ namespace MoreCounterplay.Patches
         [HarmonyPrefix]
         private static void KillJester(EnemyAI __instance)
         {
-            if (!__instance.IsOwner || !MoreCounterplay.Settings.EnableJesterCounterplay) return;
-            if (__instance.isEnemyDead || __instance.GetType() != typeof(JesterAI)) return;
+            if (!__instance.IsOwner || !MoreCounterplay.Settings.EnableJesterCounterplay)
+                return;
+            if (__instance.isEnemyDead || __instance.GetType() != typeof(JesterAI))
+                return;
 
             // Drop all items if 'EnemyAI.KillEnemy()' is ever called on a Jester (by another mod).
             if (__instance.transform.Find("JesterSurface")?.TryGetComponent(out JesterSurface jesterSurface) == true)

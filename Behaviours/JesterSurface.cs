@@ -1,5 +1,7 @@
 using GameNetcodeStuff;
 using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -23,12 +25,33 @@ namespace MoreCounterplay.Behaviours
         /// 	Might not be 100% accurate with the weight of items shown in-game, due to rounding.
         /// 	Weight from items that are destroyed or removed by other means will also remain until it resets to 0.
         /// </remarks>
-        public float TotalWeight { get; internal set; } = 0f;
+        public float TotalWeight
+        {
+            get => totalWeight;
+
+            internal set
+            {
+                totalWeight = MathF.Max(0f, value);
+                MoreCounterplay.Log($"Current weight: {totalWeight}");
+            }
+        }
 
         /// <summary>
         /// 	Jester script instance the surface is parented to.
         /// </summary>
         public JesterAI? Jester { get; private set; }
+
+        /// <summary>
+        ///     Action invoked when an item is grabbed.
+        /// </summary>
+        public static Action<GrabbableObject>? OnItemGrabAction;
+
+        /// <summary>
+        ///     Items currently places on this JesterSurface.
+        /// </summary>
+        private readonly HashSet<GrabbableObject> itemsOnSurface = new();
+
+        private float totalWeight = 0f;
 
         public override void OnNetworkSpawn()
         {
@@ -65,6 +88,8 @@ namespace MoreCounterplay.Behaviours
                 sourceTransform = transform.GetParent().Find("MeshContainer/AnimContainer/metarig/BoxContainer")
             });
             jesterConstraint.constraintActive = true;
+
+            OnItemGrabAction += OnItemGrab;
         }
 
         public new void Update()
@@ -93,7 +118,7 @@ namespace MoreCounterplay.Behaviours
             GrabbableObject item = playerWhoTriggered.currentlyHeldObjectServer;
 
             // Obtain placement position and place object on top of the Jester.
-            Vector3 position = parentTo.transform.InverseTransformPoint(itemPlacementPosition(playerWhoTriggered.gameplayCamera.transform, item));
+            Vector3 position = parentTo.transform.InverseTransformPoint(ItemPlacementPosition(playerWhoTriggered.gameplayCamera.transform, item));
             playerWhoTriggered.DiscardHeldObject(true, parentTo, position, false);
 
             // Place item on top of the Jester on all clients.
@@ -107,7 +132,7 @@ namespace MoreCounterplay.Behaviours
         /// <param name="camera">The local player camera.</param>
         /// <param name="heldItem">The local player's currently held item.</param>
         /// <returns>The Vector3 position at which to place the item.</returns>
-        public new Vector3 itemPlacementPosition(Transform camera, GrabbableObject heldItem)
+        public new Vector3 ItemPlacementPosition(Transform camera, GrabbableObject heldItem)
         {
             // Layers: [8 (Room), 9 (InteractableObject), 11 (Colliders), 30 (Vehicle)] + 13 (Triggers) + 19 (Enemies).
             int layerMask = 1073744640 + (1 << 13) + (1 << 19);
@@ -169,9 +194,11 @@ namespace MoreCounterplay.Behaviours
                 itemScanNode.gameObject.AddComponent<Rigidbody>().isKinematic = true;
             }
 
+            // Add item to JesterSurface's list of items on top of it.
+            itemsOnSurface.Add(item);
+
             // Increment Jester's total weight by the weight of the placed item.
             TotalWeight += (item.itemProperties.weight - 1f) * 105f;
-            MoreCounterplay.Log($"Current weight: {TotalWeight}");
 
             // Update Jester scan node to include its total weight.
             if (MoreCounterplay.Settings.ShowWeightOnScan && Jester.transform.Find("ScanNode")?.TryGetComponent(out ScanNodeProperties jesterScanNode) == true)
@@ -234,8 +261,8 @@ namespace MoreCounterplay.Behaviours
             if (Jester == null || Jester.currentBehaviourStateIndex == 2)
                 return;
 
+            itemsOnSurface.Remove(item);
             TotalWeight -= (item.itemProperties.weight - 1f) * 105f;
-            MoreCounterplay.Log($"Current weight: {TotalWeight}");
 
             // De-parent item from Jester surface.
             item.transform.SetParent(StartOfRound.Instance.propsContainer, true);
@@ -249,6 +276,20 @@ namespace MoreCounterplay.Behaviours
             {
                 ResetJester();
             }
+        }
+
+        /// <summary>
+        ///     Handles the item grab event by removing the grabbed item from the surface.
+        /// </summary>
+        /// <param name="item">The grabbable object being grabbed.</param>
+        private void OnItemGrab(GrabbableObject item)
+        {
+            if (!itemsOnSurface.Contains(item))
+                return;
+
+            // Remove item from JesterSurface's list of items on top of it.
+            RemoveItemOnClient(item);
+            RemoveItemServerRpc(GameNetworkManager.Instance.localPlayerController.GetComponent<NetworkObject>(), item.GetComponent<NetworkObject>());
         }
 
         /// <summary>
@@ -282,6 +323,8 @@ namespace MoreCounterplay.Behaviours
             {
                 scanNode.subText = "";
             }
+
+            itemsOnSurface.Clear();
             TotalWeight = 0.0f;
 
             // Reset Jester animations if hit.
