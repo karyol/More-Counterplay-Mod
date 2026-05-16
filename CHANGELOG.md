@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1
+
+- Fixed not working interaction for placing items on Jester
+- Interaction icon for placing items on Jester now shows correctly
+
 ## 1.5.0
 
 - Mod comptibility with v81 game version
